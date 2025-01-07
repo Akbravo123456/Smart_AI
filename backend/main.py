@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
+from transformers import pipeline, AutoModelForSeq2SeqLM, AutoTokenizer
 import sqlite3
 import os
 from dotenv import load_dotenv
@@ -105,9 +105,9 @@ if not huggingface_token:
     raise ValueError("Access token not found. Ensure 'Token' is set in the environment variables.")
 
 logging.info("Initializing Hugging Face model...")
-text_model = "facebook/opt-1.3b"
+text_model = "google/flan-t5-small"
 tokenizer = AutoTokenizer.from_pretrained(text_model, token=huggingface_token)
-model = AutoModelForCausalLM.from_pretrained(text_model, token=huggingface_token)
+model = AutoModelForSeq2SeqLM.from_pretrained(text_model, token=huggingface_token)
 gemma_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer)
 logging.info("Model initialized successfully.")
 
